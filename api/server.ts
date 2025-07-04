@@ -58,6 +58,10 @@ app.use((err: Error, _req: Request, res: Response, _: NextFunction): void => {
   res.status(500).json(response);
 });
 
+app.get('/', (_req, res) => {
+  res.send('Crash Canvas Backend is running ✅');
+});
+
 //  404 Route Handler
 app.use((req: Request, res: Response) => {
   const response: IApiResponse = {

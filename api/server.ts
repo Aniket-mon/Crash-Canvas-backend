@@ -10,23 +10,27 @@ dotenv.config();
 
 const app: Application = express();
 
+// CORS middleware 
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true,
+  exposedHeaders: ['Authorization']
+}));
+
+//  Explicitly handle preflight requests
+app.options('*', cors());
+
 connectDB().catch((error) => {
   console.error('❌ Failed to connect to database:', error);
 });
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-    exposedHeaders: ['Authorization']
-  })
-);
 
-// Routes
+//  API Routes
 app.use('/api/auth', authRoutes);
 
+//  Health Check Route
 app.get('/api/health', (_: Request, res: Response) => {
   const response: IApiResponse = {
     success: true,
@@ -39,7 +43,7 @@ app.get('/api/health', (_: Request, res: Response) => {
   res.status(200).json(response);
 });
 
-// Error Handler
+//  Error Handler
 app.use((err: Error, _req: Request, res: Response, _: NextFunction): void => {
   console.error('Unhandled error:', err);
   const response: IApiResponse = {
@@ -54,7 +58,7 @@ app.use((err: Error, _req: Request, res: Response, _: NextFunction): void => {
   res.status(500).json(response);
 });
 
-// 404 Handler
+//  404 Route Handler
 app.use((req: Request, res: Response) => {
   const response: IApiResponse = {
     success: false,

@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["ES2020"],
     "outDir": "./dist",
-    "rootDir": "./api",
+    "rootDir": "./",
     "types": ["node"],
     "strict": true,
     "esModuleInterop": true,
@@ -21,8 +21,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "exactOptionalPropertyTypes": true,
-    "typeRoots": ["./node_modules/@types", "./api/types"]
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["api/**/*"],
+  "include": ["api/**/*", "server.ts"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

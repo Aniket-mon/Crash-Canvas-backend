@@ -1,9 +1,9 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import connectDB from './config/database';
-import authRoutes from './routes/auth';
-import { IApiResponse } from './types';
+import connectDB from './api/config/database';
+import authRoutes from './api/routes/auth';
+import { IApiResponse } from './api/types';
 import serverless from 'serverless-http';
 
 dotenv.config();
@@ -12,7 +12,7 @@ const app: Application = express();
 
 // CORS middleware 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: process.env.FRONTEND_URL || 'https://crash-canvas.vercel.app',
   credentials: true,
   exposedHeaders: ['Authorization']
 }));

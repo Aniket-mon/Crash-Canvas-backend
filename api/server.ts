@@ -63,4 +63,4 @@ app.use((req: Request, res: Response) => {
   res.status(404).json(response);
 });
 
-export const handler = serverless(app);
+export default serverless(app);

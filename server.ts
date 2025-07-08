@@ -12,6 +12,7 @@ const app: Application = express();
 const allowedOrigins = [
   'https://crash-canvas.vercel.app',
   'http://localhost:5173',
+  'https://crash-canvas-aniket-bhattacharyas-projects.vercel.app'
 ];
 
 app.use(cors({

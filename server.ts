@@ -9,11 +9,28 @@ dotenv.config();
 
 const app: Application = express();
 
+const allowedOrigins = [
+  'https://crash-canvas.vercel.app',
+  'http://localhost:5173',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/+$/, ''))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  },
+  credentials: true,
+}));
+console.log('🌐 allowedOrigin:', allowedOrigins);
+
+
 // CORS middleware 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://crash-canvas.vercel.app',
-  credentials: true,
-  exposedHeaders: ['Authorization']
+  origin: allowedOrigins,
+  credentials: true
 }));
 
 //  Explicitly handle preflight requests
@@ -27,9 +44,11 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 //  API Routes
+console.log('Mounting authRoutes at /api/auth');
 app.use('/api/auth', authRoutes);
 
 //  Health Check Route
+console.log('Mounting health route');
 app.get('/api/health', (_: Request, res: Response) => {
   const response: IApiResponse = {
     success: true,

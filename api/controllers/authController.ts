@@ -35,12 +35,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       message: 'Registration successful. Please log in.'
     });
   } catch (error) {
-    console.error('❌ Registration error:', error);
+  console.error('❌ Registration error:', error); // already exists
+
     res.status(500).json({
       success: false,
-      message: 'Server error during registration'
+      message: error instanceof Error ? error.message : 'Unknown server error',
+      error, // ✅ Send raw error back (remove this in production)
     });
   }
+
 };
 
 

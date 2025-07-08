@@ -8,7 +8,7 @@ router.post('/register', validateRegistration, register);
 router.post('/login', validateLogin, login);
 
 
-router.get('/health', (_req: Request, res: Response) => {
+router.get('/', (_req: Request, res: Response) => {
   const response = {
     success: true,
     message: 'Server is running',

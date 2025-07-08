@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import connectDB from './api/config/database';
 import authRoutes from './api/routes/auth';
 import { IApiResponse } from './api/types';
-import serverless from 'serverless-http';
 
 dotenv.config();
 
@@ -71,4 +70,6 @@ app.use((req: Request, res: Response) => {
   res.status(404).json(response);
 });
 
-export default serverless(app);
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server running...');
+});

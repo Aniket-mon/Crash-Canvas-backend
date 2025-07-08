@@ -39,42 +39,40 @@ class DatabaseConnection {
     }
 
     public async connect(): Promise<void> {
-        if (this.isConnected || mongoose.connection.readyState === 1) {
-            console.log('Database already connected');
-            return;
-        }
-
-        try {
-            const config = this.getConfig();
-
-            mongoose.connection.once('connected', () => {
-                console.log('✅ MongoDB connected successfully');
-                this.isConnected = true;
-            });
-
-            mongoose.connection.on('error', (error) => {
-                console.error('❌ MongoDB connection error:', error);
-                this.isConnected = false;
-            });
-
-            mongoose.connection.on('disconnected', () => {
-                console.log('⚠️ MongoDB disconnected');
-                this.isConnected = false;
-            });
-
-            process.once('SIGINT', () => this.gracefulShutdown());
-            process.once('SIGTERM', () => this.gracefulShutdown());
-
-            const conn = await mongoose.connect(config.uri, config.options);
-
-            this.isConnected = true;
-            console.log(`🚀 MongoDB Connected: ${conn.connection.host}`);
-            console.log(`📊 Database Name: ${conn.connection.name}`);
-        } catch (error) {
-            console.error('Database connection error:', error instanceof Error ? error.message : error);
-            process.exit(1);
-        }
+    if (this.isConnected || mongoose.connection.readyState === 1) {
+        console.log('✅ Database already connected');
+        return;
     }
+
+    try {
+        const config = this.getConfig();
+
+        const conn = await mongoose.connect(config.uri, config.options);
+
+        // ✅ These values will now be defined
+        this.isConnected = true;
+        console.log(`🚀 MongoDB Connected: ${conn.connection.host}`);
+        console.log(`📊 Database Name: ${conn.connection.name}`);
+
+        // ✅ Set listeners AFTER successful connection
+        mongoose.connection.on('error', (error) => {
+            console.error('❌ MongoDB connection error:', error);
+            this.isConnected = false;
+        });
+
+        mongoose.connection.on('disconnected', () => {
+            console.log('⚠️ MongoDB disconnected');
+            this.isConnected = false;
+        });
+
+        process.once('SIGINT', () => this.gracefulShutdown());
+        process.once('SIGTERM', () => this.gracefulShutdown());
+    } catch (error) {
+        console.error('❌ Database connection error:', error instanceof Error ? error.message : error);
+        throw error; // 🔁 Don't exit process in serverless envs
+    }
+}
+
 
     public async disconnect(): Promise<void> {
         if (!this.isConnected && mongoose.connection.readyState !== 1) {

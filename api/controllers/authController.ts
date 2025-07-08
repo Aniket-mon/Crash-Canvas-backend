@@ -1,6 +1,8 @@
 import { Request, Response, RequestHandler } from 'express';
 import User from '../models/user';
 import { IUserRegistration, IUserLogin } from '../interfaces/user.interface';
+import connectDB from '../config/database';
+
 
 const sendError = (res: Response, statusCode: number, message: string): void => {
   res.status(statusCode).json({
@@ -11,6 +13,8 @@ const sendError = (res: Response, statusCode: number, message: string): void => 
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
+    await connectDB(); // ✅ Make sure DB is connected before queries
+
     const { name, email }: IUserRegistration = req.body;
     if (!name || !email) return sendError(res, 400, 'Name and email are required');
 
@@ -39,8 +43,11 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+
 export const login: RequestHandler = async (req, res) => {
   try {
+    await connectDB(); // ✅ Make sure DB is connected before queries
+
     const { email }: IUserLogin = req.body;
     if (!email) return sendError(res, 400, 'Email is required');
 

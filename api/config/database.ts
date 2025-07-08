@@ -32,7 +32,6 @@ class DatabaseConnection {
                 maxPoolSize: 10,
                 serverSelectionTimeoutMS: 5000,
                 socketTimeoutMS: 45000,
-                // bufferMaxEntries is deprecated, removed
                 bufferCommands: false,
                 autoIndex: process.env.NODE_ENV === 'development',
             }
